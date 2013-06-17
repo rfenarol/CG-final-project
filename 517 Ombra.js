@@ -4,17 +4,7 @@ var Y=1;
 var Z=2;
 
 //COLORS
-var black = [0,0,0];
 var lightBlack = [0.2,0.2,0.2];
-var grey = [0.85,0.85,0.85];
-var glassBlue = [0,0.8,1,0.8];
-var red = [1,0,0];
-var green = [0,1,0]
-var blue = [0,0,1];
-var white = [1,1,1];
-var orange = [1,0.6,0];
-var darkRed = [0.8,0,0];
-var brownWood = [207/255, 137/255, 87/255];
 
 /******************UTILS******************/
 /*Function that translates all the points of an array of the amount indicated along the respective axis.*/
@@ -43,49 +33,6 @@ function bezierSurfaceInterpolator(curve){
   return result;
 }
 
-/*Function that takes as scale factors only positive values ​​greater than 1 to enlarge
-and less than 1 to zoom out. With negative values ​​fore the figure on the opposite quadrant*/
-function getScaledObject(scaleFactor, obj){
-  obj = S([X,Y,Z])([scaleFactor,scaleFactor,scaleFactor])(obj);
-  return obj;
-}
-
-
-/*Function that creates a half-sphere. It takes as parameters the radius, the domain, and the color.*/
-function drawCup(r,color,domainCup) {
-    var domain = domainCup;
-    var mapping = function(p) {
-        var u = p[0];
-        var v = p[1];
-        return [r*COS(u)*COS(v),r*COS(u)*SIN(v),r*SIN(u)];
-    }
-    var cup = MAP(mapping)(domain);
-    return COLOR(color)(cup);
-}
-
-/*Function that given a point approaching all the control points of the controlpoints array to the given point */
-function controlPointsReducer(point, controlPoints){
-  var result = [];
-  controlPoints.forEach(function(item){
-    xpos = (point[0]+item[0])/2;
-    ypos = (point[1]+item[1])/2;
-    result.push([xpos,ypos,0]);
-  });
-  return result;
-}
-
-/*Function that given an array of points multiplies them all to a scale factor*/
-function pointScale(controlPoints,scaleFactor){
-  var result = [];
-  controlPoints.forEach(function(item){
-    xpos = item[0]*scaleFactor;
-    ypos = item[1]*scaleFactor;
-    zpos = item[2]*scaleFactor;
-    result.push([xpos,ypos,zpos]);
-  });
-  return result;
-}
-
 
 /*Function that rotates all points of an array, the angle indicated on the axis indicated.*/
 function pointRotation(points, degree, axis){
@@ -110,15 +57,6 @@ function prodottoMatVect(mat, vect){
   return result;
 }
 
-/*Function to create a cylinder*/
-function CYLINDER(dim){
-  function CYLINDER0(intervals){
-    var cylinder = DISK(dim[0])(intervals);
-    cylinder = EXTRUDE([dim[1]])(cylinder);
-    return cylinder;
-  }
-  return CYLINDER0;
-}
 
 function controlPointsAdjusterXY(controls){
     var result = [];
@@ -131,42 +69,6 @@ function controlPointsAdjusterXY(controls){
     return result;
 }
 
-function controlPointsAdjusterXZ(controls){
-	var result = []
-   	controls.forEach(function(item){
-    	item[0]=(item[0])/100;
-        item[1]=(item[1])/100;
-        item[2] = item[1];
-        item[1]=0;
-        result.push(item);
-    });
-    return result;
-}
-
-
-function controlPointsAdjusterYZ(controls){
-	var result = []
-    controls.forEach(function(item){
-    	item[0]=(item[0])/100;
-        item[1]=(item[1])/100;
-        item[1]=-item[1];
-        item[2]=item[0];
-        item[0]=0;
-        result.push(item);
-    });
-    return result;
-}
-
-function annulus_sector (alpha, r, R) {
-  var domain = DOMAIN([[0,alpha],[r,R]])([36,1]);
-  var mapping = function (v) {
-    var a = v[0];
-    var r = v[1];
-    return [r*COS(a), r*SIN(a)];
-  }
-  var model = MAP(mapping)(domain);
-  return model;
-}
 
 function curveShifter(curve,dh,dv){
   var result = [];
@@ -206,11 +108,11 @@ var domain1D = INTERVALS(1)(36);
 var domain2D = DOMAIN([[0,1],[0,1]])([36,36]);
 
 //MEASURES
-var footlenght = 0.79;
-var feetDistance = 0.67;
+var leglenght = 0.79;
+var legsDistance = 0.67;
 var supportsDistance = 0.57;
 
-/******************FEET******************/
+/******************LEGS******************/
 var controls0 = [[86,110,0],[95,110,0],[90,112,0],[103,101,0]];
 controls0 = controlPointsAdjusterXY(controls0);
 var mapc0 = BEZIER(S0)(controls0);
@@ -231,17 +133,16 @@ controls3 = controlPointsAdjusterXY(controls3);
 var mapc3 = BEZIER(S0)(controls3);
 var curve3 = MAP(mapc3)(domain1D);
 
-var foot = rectangularSurfaceFromCP([controls0,controls1,controls2,controls3],-0.1,0.01);
-foot = T([X,Y])([-0.86,1.10])(foot);
+var leg = rectangularSurfaceFromCP([controls0,controls1,controls2,controls3],-0.1,0.01);
+leg = T([X,Y])([-0.86,1.10])(leg);
 var cap = CUBOID([0.01,0.01,0.1]);
-var cap1 = T([X])([footlenght])(cap);
-foot = STRUCT([foot,cap,cap1]);
+var cap1 = T([X])([leglenght])(cap);
+leg = STRUCT([leg,cap,cap1]);
 
-var foot1 = T([Z])([feetDistance])(foot);
+var leg1 = T([Z])([legsDistance])(leg);
 
-var feet = STRUCT([foot,foot1]);
-DRAW(feet);
-/******************FEET******************/
+var legs = STRUCT([leg,leg1]);
+/******************LEGS******************/
 
 /******************SUPPORT******************/
 var verticalSupport = CUBOID([0.01,0.35,0.1]);
@@ -255,7 +156,6 @@ part2 = T([X])([0.62])(part2);
 
 var support = STRUCT([verticalSupport,verticalSupport1,part1,horizontalSupport,horizontalSupport1,part2]);
 support = T([X,Y,Z])([0.05,0.20,0.05])(support);
-DRAW(support);
 /******************SUPPORT******************/
 
 /******************PILLOWS******************/
@@ -277,15 +177,15 @@ controls2 = pointTranslation(controls2,-0.89,0.85,0);
 var mapc2 = BEZIER(S0)(controls2);
 var curve2 = MAP(mapc2)(domain1D);
 
-var controls01 = pointTranslation(controls0,0,0,feetDistance);
+var controls01 = pointTranslation(controls0,0,0,legsDistance);
 var mapc01= BEZIER(S0)(controls01);
 var curve01 = MAP(mapc01)(domain1D);
 
-var controls11 = pointTranslation(controls1,0,0,feetDistance);
+var controls11 = pointTranslation(controls1,0,0,legsDistance);
 var mapc11= BEZIER(S0)(controls11);
 var curve11 = MAP(mapc11)(domain1D);
 
-var controls21 = pointTranslation(controls2,0,0,feetDistance);
+var controls21 = pointTranslation(controls2,0,0,legsDistance);
 var mapc21= BEZIER(S0)(controls21);
 var curve21 = MAP(mapc21)(domain1D);
 
@@ -293,7 +193,7 @@ var halfpillow = bezierSurfaceInterpolator([[mapc0,mapc01],[mapc1,mapc11],[mapc2
                                             [mapc0,mapc1],[mapc1,mapc2],[mapc0,mapc2],
                                             [mapc01,mapc11],[mapc11,mapc21],[mapc01,mapc21]]);
 
-var halfpillow1 = T([Z])([feetDistance])(R([Y,Z])(PI)(halfpillow)); 
+var halfpillow1 = T([Z])([legsDistance])(R([Y,Z])(PI)(halfpillow)); 
 var pillow = STRUCT([halfpillow1,halfpillow]);
 
 
@@ -304,7 +204,8 @@ pillow2 = T([X,Y,Z])([0.15,0.36,0.05])(R([X,Y])(PI/2)(pillow2));
 
 var pillows = STRUCT([pillow1,pillow2]);
 pillows = COLOR(lightBlack)(pillows);
-DRAW(pillows);
 /******************PILLOWS******************/
 
 
+var model = STRUCT([pillows,support,legs])
+DRAW(model);

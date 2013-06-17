@@ -5,15 +5,6 @@ var Z=2;
 
 //COLORS
 var black = [0,0,0];
-var lightBlack = [0.2,0.2,0.2];
-var grey = [0.85,0.85,0.85];
-var glassBlue = [0,0.8,1,0.8];
-var red = [1,0,0];
-var green = [0,1,0]
-var blue = [0,0,1];
-var white = [1,1,1];
-var orange = [1,0.6,0];
-var darkRed = [0.8,0,0];
 var brownWood = [207/255, 137/255, 87/255];
 var darkBrownWood = [83/255,27/255,0/255];
 var darkGrey = [87/255,87/255,87/255]
@@ -46,49 +37,6 @@ function bezierSurfaceInterpolator(curve){
   return result;
 }
 
-/*Function that takes as scale factors only positive values ​​greater than 1 to enlarge
-and less than 1 to zoom out. With negative values ​​fore the figure on the opposite quadrant*/
-function getScaledObject(scaleFactor, obj){
-  obj = S([X,Y,Z])([scaleFactor,scaleFactor,scaleFactor])(obj);
-  return obj;
-}
-
-
-/*Function that creates a half-sphere. It takes as parameters the radius, the domain, and the color.*/
-function drawCup(r,color,domainCup) {
-    var domain = domainCup;
-    var mapping = function(p) {
-        var u = p[0];
-        var v = p[1];
-        return [r*COS(u)*COS(v),r*COS(u)*SIN(v),r*SIN(u)];
-    }
-    var cup = MAP(mapping)(domain);
-    return COLOR(color)(cup);
-}
-
-/*Function that given a point approaching all the control points of the controlpoints array to the given point */
-function controlPointsReducer(point, controlPoints){
-  var result = [];
-  controlPoints.forEach(function(item){
-    xpos = (point[0]+item[0])/2;
-    ypos = (point[1]+item[1])/2;
-    result.push([xpos,ypos,0]);
-  });
-  return result;
-}
-
-/*Function that given an array of points multiplies them all to a scale factor*/
-function pointScale(controlPoints,scaleFactor){
-  var result = [];
-  controlPoints.forEach(function(item){
-    xpos = item[0]*scaleFactor;
-    ypos = item[1]*scaleFactor;
-    zpos = item[2]*scaleFactor;
-    result.push([xpos,ypos,zpos]);
-  });
-  return result;
-}
-
 
 /*Function that rotates all points of an array, the angle indicated on the axis indicated.*/
 function pointRotation(points, degree, axis){
@@ -113,15 +61,6 @@ function prodottoMatVect(mat, vect){
   return result;
 }
 
-/*Function to create a cylinder*/
-function CYLINDER(dim){
-  function CYLINDER0(intervals){
-    var cylinder = DISK(dim[0])(intervals);
-    cylinder = EXTRUDE([dim[1]])(cylinder);
-    return cylinder;
-  }
-  return CYLINDER0;
-}
 
 function controlPointsAdjusterXY(controls){
     var result = [];
@@ -134,31 +73,6 @@ function controlPointsAdjusterXY(controls){
     return result;
 }
 
-function controlPointsAdjusterXZ(controls){
-  var result = []
-    controls.forEach(function(item){
-      item[0]=(item[0])/100;
-        item[1]=(item[1])/100;
-        item[2] = item[1];
-        item[1]=0;
-        result.push(item);
-    });
-    return result;
-}
-
-
-function controlPointsAdjusterYZ(controls){
-  var result = []
-    controls.forEach(function(item){
-      item[0]=(item[0])/100;
-        item[1]=(item[1])/100;
-        item[1]=-item[1];
-        item[2]=item[0];
-        item[0]=0;
-        result.push(item);
-    });
-    return result;
-}
 /******************UTILS******************/
 
 //MEASURES
@@ -252,7 +166,7 @@ lines = COLOR(darkBrownWood)(lines);
 
 /*******************DESK*********************/
 
-/*******************FEET*********************/
+/*******************LEGS*********************/
 var controls0 = [[544,70,0],[544,65,0],[552,65,0],[558,70,0]];
 controls0 = controlPointsAdjusterXY(controls0);
 controls0 = pointTranslation(controls0, -5.44,0.7,0);
@@ -271,17 +185,17 @@ var controls3 = pointTranslation(controls1, 0,0,-2.22 );
 var mapc3 = BEZIER(S0)(controls3);
 var curve3 = MAP(mapc3)(domain1D);
 
-var foot = bezierSurfaceInterpolator([[mapc0,mapc1],[mapc2,mapc3],[mapc0,mapc2],[mapc1,mapc3]]);
-foot = COLOR(brownWood)(foot);
-foot = S([X,Y])([3,3])(foot);
+var leg = bezierSurfaceInterpolator([[mapc0,mapc1],[mapc2,mapc3],[mapc0,mapc2],[mapc1,mapc3]]);
+leg = COLOR(brownWood)(leg);
+leg = S([X,Y])([3,3])(leg);
 
 /********************************************/
 
-var foot1 = R([X,Y])(PI/2)(foot);
-foot1 = T([X,Y])([width/2-0.2,1])(foot1);
+var leg1 = R([X,Y])(PI/2)(leg);
+leg1 = T([X,Y])([width/2-0.2,1])(leg1);
 
-var foot12 = R([X,Y])(PI/1.20)(foot);
-foot12 = T([X,Y])([3.5,2.2])(foot12);
+var leg12 = R([X,Y])(PI/1.20)(leg);
+leg12 = T([X,Y])([3.5,2.2])(leg12);
 
 /********************************************/
 
@@ -303,20 +217,19 @@ var controls3 = pointTranslation(controls1, 0,0,-2.22 );
 var mapc3 = BEZIER(S0)(controls3);
 var curve3 = MAP(mapc3)(domain1D);
 
-var foot2 = bezierSurfaceInterpolator([[mapc0,mapc1],[mapc2,mapc3],[mapc0,mapc2],[mapc1,mapc3]]);
-foot2 = COLOR(brownWood)(foot2);
-foot2 = S([X,Y])([3,2])(foot2);
-foot2 = R([X,Y])(PI/1.8)(foot2);
-foot2 = T([X,Y])([0.5,6])(foot2);
+var leg2 = bezierSurfaceInterpolator([[mapc0,mapc1],[mapc2,mapc3],[mapc0,mapc2],[mapc1,mapc3]]);
+leg2 = COLOR(brownWood)(leg2);
+leg2 = S([X,Y])([3,2])(leg2);
+leg2 = R([X,Y])(PI/1.8)(leg2);
+leg2 = T([X,Y])([0.5,6])(leg2);
 
 /********************************************/
 
-var feet = STRUCT([foot1,foot12,foot2]);
-DRAW(feet)
+var legs = STRUCT([leg1,leg12,leg2]);
 
-/*******************FEET*********************/
+/*******************LEGS*********************/
 
-model = STRUCT([model,feet]);
+model = STRUCT([model,legs]);
 DRAW(COLOR(darkBrownWood)(lines));
 DRAW(model);
 

@@ -4,16 +4,6 @@ var Y=1;
 var Z=2;
 
 //COLORS
-var black = [0,0,0];
-var lightBlack = [0.2,0.2,0.2];
-var grey = [0.85,0.85,0.85];
-var glassBlue = [0,0.8,1,0.8];
-var red = [1,0,0];
-var green = [0,1,0]
-var blue = [0,0,1];
-var white = [1,1,1];
-var orange = [1,0.6,0];
-var darkRed = [0.8,0,0];
 var brownWood = [207/255, 137/255, 87/255];
 
 /******************UTILS******************/
@@ -42,50 +32,6 @@ function bezierSurfaceInterpolator(curve){
     });
   return result;
 }
-
-/*Function that takes as scale factors only positive values ​​greater than 1 to enlarge
-and less than 1 to zoom out. With negative values ​​fore the figure on the opposite quadrant*/
-function getScaledObject(scaleFactor, obj){
-  obj = S([X,Y,Z])([scaleFactor,scaleFactor,scaleFactor])(obj);
-  return obj;
-}
-
-
-/*Function that creates a half-sphere. It takes as parameters the radius, the domain, and the color.*/
-function drawCup(r,color,domainCup) {
-    var domain = domainCup;
-    var mapping = function(p) {
-        var u = p[0];
-        var v = p[1];
-        return [r*COS(u)*COS(v),r*COS(u)*SIN(v),r*SIN(u)];
-    }
-    var cup = MAP(mapping)(domain);
-    return COLOR(color)(cup);
-}
-
-/*Function that given a point approaching all the control points of the controlpoints array to the given point */
-function controlPointsReducer(point, controlPoints){
-  var result = [];
-  controlPoints.forEach(function(item){
-    xpos = (point[0]+item[0])/2;
-    ypos = (point[1]+item[1])/2;
-    result.push([xpos,ypos,0]);
-  });
-  return result;
-}
-
-/*Function that given an array of points multiplies them all to a scale factor*/
-function pointScale(controlPoints,scaleFactor){
-  var result = [];
-  controlPoints.forEach(function(item){
-    xpos = item[0]*scaleFactor;
-    ypos = item[1]*scaleFactor;
-    zpos = item[2]*scaleFactor;
-    result.push([xpos,ypos,zpos]);
-  });
-  return result;
-}
-
 
 /*Function that rotates all points of an array, the angle indicated on the axis indicated.*/
 function pointRotation(points, degree, axis){
@@ -126,32 +72,6 @@ function controlPointsAdjusterXY(controls){
         item[0]=item[0]/100;
         item[1]=item[1]/100;
         item[1]=-item[1];
-        result.push(item);
-    });
-    return result;
-}
-
-function controlPointsAdjusterXZ(controls){
-	var result = []
-   	controls.forEach(function(item){
-    	item[0]=(item[0])/100;
-        item[1]=(item[1])/100;
-        item[2] = item[1];
-        item[1]=0;
-        result.push(item);
-    });
-    return result;
-}
-
-
-function controlPointsAdjusterYZ(controls){
-	var result = []
-    controls.forEach(function(item){
-    	item[0]=(item[0])/100;
-        item[1]=(item[1])/100;
-        item[1]=-item[1];
-        item[2]=item[0];
-        item[0]=0;
         result.push(item);
     });
     return result;

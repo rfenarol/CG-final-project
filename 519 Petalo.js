@@ -4,17 +4,9 @@ var Y=1;
 var Z=2;
 
 //COLORS
-var black = [0,0,0];
+
 var lightBlack = [0.2,0.2,0.2];
-var grey = [0.85,0.85,0.85];
-var glassBlue = [0,0.8,1,0.8];
-var red = [1,0,0];
-var green = [0,1,0]
-var blue = [0,0,1];
-var white = [1,1,1];
-var orange = [1,0.6,0];
 var darkRed = [0.8,0,0];
-var brownWood = [207/255, 137/255, 87/255];
 
 /******************UTILS******************/
 /*Function that translates all the points of an array of the amount indicated along the respective axis.*/
@@ -43,50 +35,6 @@ function bezierSurfaceInterpolator(curve){
   return result;
 }
 
-/*Function that takes as scale factors only positive values ​​greater than 1 to enlarge
-and less than 1 to zoom out. With negative values ​​fore the figure on the opposite quadrant*/
-function getScaledObject(scaleFactor, obj){
-  obj = S([X,Y,Z])([scaleFactor,scaleFactor,scaleFactor])(obj);
-  return obj;
-}
-
-
-/*Function that creates a half-sphere. It takes as parameters the radius, the domain, and the color.*/
-function drawCup(r,color,domainCup) {
-    var domain = domainCup;
-    var mapping = function(p) {
-        var u = p[0];
-        var v = p[1];
-        return [r*COS(u)*COS(v),r*COS(u)*SIN(v),r*SIN(u)];
-    }
-    var cup = MAP(mapping)(domain);
-    return COLOR(color)(cup);
-}
-
-/*Function that given a point approaching all the control points of the controlpoints array to the given point */
-function controlPointsReducer(point, controlPoints){
-  var result = [];
-  controlPoints.forEach(function(item){
-    xpos = (point[0]+item[0])/2;
-    ypos = (point[1]+item[1])/2;
-    result.push([xpos,ypos,0]);
-  });
-  return result;
-}
-
-/*Function that given an array of points multiplies them all to a scale factor*/
-function pointScale(controlPoints,scaleFactor){
-  var result = [];
-  controlPoints.forEach(function(item){
-    xpos = item[0]*scaleFactor;
-    ypos = item[1]*scaleFactor;
-    zpos = item[2]*scaleFactor;
-    result.push([xpos,ypos,zpos]);
-  });
-  return result;
-}
-
-
 /*Function that rotates all points of an array, the angle indicated on the axis indicated.*/
 function pointRotation(points, degree, axis){
   var rm;
@@ -110,16 +58,6 @@ function prodottoMatVect(mat, vect){
   return result;
 }
 
-/*Function to create a cylinder*/
-function CYLINDER(dim){
-  function CYLINDER0(intervals){
-    var cylinder = DISK(dim[0])(intervals);
-    cylinder = EXTRUDE([dim[1]])(cylinder);
-    return cylinder;
-  }
-  return CYLINDER0;
-}
-
 function controlPointsAdjusterXY(controls){
     var result = [];
     controls.forEach(function(item){
@@ -141,62 +79,6 @@ function controlPointsAdjusterXZ(controls){
         result.push(item);
     });
     return result;
-}
-
-
-function controlPointsAdjusterYZ(controls){
-	var result = []
-    controls.forEach(function(item){
-    	item[0]=(item[0])/100;
-        item[1]=(item[1])/100;
-        item[1]=-item[1];
-        item[2]=item[0];
-        item[0]=0;
-        result.push(item);
-    });
-    return result;
-}
-
-function annulus_sector (alpha, r, R) {
-  var domain = DOMAIN([[0,alpha],[r,R]])([36,1]);
-  var mapping = function (v) {
-    var a = v[0];
-    var r = v[1];
-    return [r*COS(a), r*SIN(a)];
-  }
-  var model = MAP(mapping)(domain);
-  return model;
-}
-
-function curveShifter(curve,dh,dv){
-  var result = [];
-  result.push(curve);
-  curveh = pointTranslation(curve, 0, 0, -dh);
-  result.push(curveh);
-  curvevh  = pointTranslation(curve, 0, dv, -dh);
-  result.push(curvevh);
-  curvev = pointTranslation(curve, 0, dv, 0);
-  result.push(curvev);
-  return result;
-}
-
-function rectangularSurfaceFromCP(cp,dh,dv){
-  var result = null;
-  cp.forEach(function(item){
-    var cp0 = [];
-    var mappings = [];
-    cp0 = curveShifter(item,dh,dv);
-    cp0.forEach(function(item0){
-      var mapc = BEZIER(S0)(item0);
-      mappings.push(mapc);
-    });
-    if(result === null){
-      result = bezierSurfaceInterpolator([[mappings[0],mappings[1]],[mappings[1],mappings[2]],[mappings[2],mappings[3]],[mappings[3],mappings[0]]]);  
-    } else{
-      result = STRUCT([result, bezierSurfaceInterpolator([[mappings[0],mappings[1]],[mappings[1],mappings[2]],[mappings[2],mappings[3]],[mappings[3],mappings[0]]])]);
-    }
-  });
-  return result;
 }
 
 /******************UTILS******************/
@@ -271,7 +153,6 @@ junctions = COLOR(lightBlack)(junctions);
 surface = COLOR(darkRed)(surface);
 surface = STRUCT([surface,junctions]);
 
-DRAW(surface);
 /******************DESK******************/
 
 /******************FEET******************/
@@ -331,6 +212,7 @@ var translDown = T([X,Y])([0.2,-0.06]);
 var tranf = COMP([scale,rotationLeft,translDown]);
 var model = STRUCT(REPLICA(5)([model,tranf]));
 
+model = T([X])([2])(model);
 DRAW(model);
 
 
