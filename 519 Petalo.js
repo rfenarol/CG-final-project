@@ -87,7 +87,7 @@ function controlPointsAdjusterXZ(controls){
 var domain1D = INTERVALS(1)(36);
 var domain2D = DOMAIN([[0,1],[0,1]])([36,36]);
 
-/******************DESK******************/
+/******************PLAN******************/
 var controls0 = [[81,290,0],[35,291,0],[30,291,0],[54,260,0],[58,255,0],[76,238,0],[81,238,0]];
 controls0 = controlPointsAdjusterXZ(controls0);
 controls0 = pointTranslation(controls0, -0.81,0,-2.38);
@@ -153,9 +153,9 @@ junctions = COLOR(lightBlack)(junctions);
 surface = COLOR(darkRed)(surface);
 surface = STRUCT([surface,junctions]);
 
-/******************DESK******************/
+/******************PLAN******************/
 
-/******************FEET******************/
+/******************LEGS******************/
 var controls0 = [[77,157,0],[78,184,0],[78,187,0],[82,187,0]];
 controls0 = controlPointsAdjusterXY(controls0);
 controls0 = pointTranslation(controls0, -0.82,1.57,0);
@@ -186,25 +186,25 @@ var out3 = MAP(sur3)(domain2D);
 var sur4 = CUBIC_HERMITE(S1)([mapc1,mapc3,[0,0,-0.025],[0,0,0.025]]);
 var out4 = MAP(sur4)(domain2D);
 
-var footPart = CUBOID([0.1,0.02,0.01])
-footPart = T([X,Y,Z])([-0.05,-0.1,-0.01])(footPart);
-var foot = STRUCT([out1,out2,out3,out4,footPart]);
-var foot1 = R([Y,Z])([PI/22.5])(foot);
-foot1 = T([Y,Z])([0.02,0.02])(foot1);
-var foot2 = R([Y,Z])([PI/22.5])(foot);
-foot2 =  R([X,Z])([-2*(PI/3)])(foot2);
-foot2 = T([X,Y,Z])([0.345,0.02,0.465])(foot2);
-var foot3 = R([Y,Z])([PI/22.5])(foot);
-foot3 = R([X,Z])([2*(PI/3)])(foot3);
-foot3 = T([X,Y,Z])([-0.345,0.02,0.465])(foot3);
+var legPart = CUBOID([0.1,0.02,0.01])
+legPart = T([X,Y,Z])([-0.05,-0.1,-0.01])(legPart);
+var leg = STRUCT([out1,out2,out3,out4,legPart]);
+var leg1 = R([Y,Z])([PI/22.5])(leg);
+leg1 = T([Y,Z])([0.02,0.02])(leg1);
+var leg2 = R([Y,Z])([PI/22.5])(leg);
+leg2 =  R([X,Z])([-2*(PI/3)])(leg2);
+leg2 = T([X,Y,Z])([0.345,0.02,0.465])(leg2);
+var leg3 = R([Y,Z])([PI/22.5])(leg);
+leg3 = R([X,Z])([2*(PI/3)])(leg3);
+leg3 = T([X,Y,Z])([-0.345,0.02,0.465])(leg3);
 
 
-var feet = STRUCT([foot1,foot2,foot3]);
-feet = COLOR(lightBlack)(feet);
+var legs = STRUCT([leg1,leg2,leg3]);
+legs = COLOR(lightBlack)(legs);
 
-/******************FEET******************/
+/******************LEGS******************/
 
-var model = STRUCT([feet, surface]);
+var model = STRUCT([legs, surface]);
 
 var rotationLeft = R([X,Z])(PI/4);
 var scale = S([X,Y,Z])([0.8,0.8,0.8]);
