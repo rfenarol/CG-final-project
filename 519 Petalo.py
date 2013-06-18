@@ -100,7 +100,7 @@ def controlPointsAdjusterXZ(controls):
 domain1D = INTERVALS(1)(36)
 domain2D = DOMAIN_GRID([36,36])
 
-"""DESK"""
+"""PLAN"""
 controls0 = [[81,290,0],[35,291,0],[30,291,0],[54,260,0],[58,255,0],[76,238,0],[81,238,0]]
 controls0 = controlPointsAdjusterXZ(controls0)
 controls0 = pointTranslation(controls0, -0.81,0,-2.38)
@@ -121,9 +121,9 @@ curve3 = MAP(mapc3)(domain1D)
 
 surface = bezierSurfaceInterpolator([[mapc0,mapc1],[mapc2,mapc3],[mapc0,mapc2],[mapc1,mapc3]])
 
-"""DESK"""
+"""PLAN"""
 
-"""FEET"""
+"""LEGS"""
 controls0 = [[77,157,0],[78,184,0],[78,187,0],[82,187,0]]
 controls0 = controlPointsAdjusterXY(controls0)
 controls0 = pointTranslation(controls0, -0.82,1.57,0)
@@ -145,23 +145,23 @@ mapc3 = BEZIER(S1)(controls3)
 curve3 = MAP(mapc3)(domain1D)
 
 
-foot = STRUCT([curve0,curve1,curve2,curve3])
-foot1 = R([Y,Z])(PI/22.5)(foot)
-foot1 = T([Y,Z])([0.02,0.02])(foot1)
-foot2 = R([Y,Z])(PI/22.5)(foot)
-foot2 =  R([X,Z])(2*(PI/3))(foot2)
-foot2 = T([X,Y,Z])([0.345,0.02,0.465])(foot2)
-foot3 = R([Y,Z])(PI/22.5)(foot)
-foot3 = R([X,Z])(-2*(PI/3))(foot3)
-foot3 = T([X,Y,Z])([-0.345,0.02,0.465])(foot3)
+leg = STRUCT([curve0,curve1,curve2,curve3])
+leg1 = R([Y,Z])(PI/22.5)(leg)
+leg1 = T([Y,Z])([0.02,0.02])(leg1)
+leg2 = R([Y,Z])(PI/22.5)(leg)
+leg2 =  R([X,Z])(2*(PI/3))(leg2)
+leg2 = T([X,Y,Z])([0.345,0.02,0.465])(leg2)
+leg3 = R([Y,Z])(PI/22.5)(leg)
+leg3 = R([X,Z])(-2*(PI/3))(leg3)
+leg3 = T([X,Y,Z])([-0.345,0.02,0.465])(leg3)
 
 
-feet = STRUCT([foot1,foot2,foot3])
-feet = COLOR(black)(feet)
+legs = STRUCT([leg1,leg2,leg3])
+legs = COLOR(black)(legs)
 
-"""FEET"""
+"""LEGS"""
 
-model = STRUCT([feet, surface])
+model = STRUCT([legs, surface])
 VIEW(model)
 
 
