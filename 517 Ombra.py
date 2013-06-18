@@ -147,7 +147,23 @@ leg = STRUCT([leg,cap,cap1])
 leg1 = T([Z])([legsDistance])(leg)
 
 legs = STRUCT([leg,leg1])
-VIEW(legs)
 """LEGS"""
+
+"""SUPPORT"""
+verticalSupport = CUBOID([0.01,0.35,0.1])
+verticalSupport1 = T([Z])([supportsDistance])(verticalSupport)
+part1 = CUBOID([0.01,0.12,supportsDistance])
+part1 = T([Y])([0.23])(part1)
+horizontalSupport = CUBOID([0.72,0.01,0.1])
+horizontalSupport1 = T([Z])([supportsDistance])(horizontalSupport)
+part2 = CUBOID([0.10,0.01,supportsDistance])
+part2 = T([X])([0.62])(part2)
+
+support = STRUCT([verticalSupport,verticalSupport1,part1,horizontalSupport,horizontalSupport1,part2])
+support = T([X,Y,Z])([0.05,0.20,0.05])(support)
+"""SUPPORT"""
+
+frame = STRUCT([legs,support])
+VIEW(frame)
 
 
