@@ -125,18 +125,18 @@ function rectangularSurfaceFromCP(cp,dh,dv){
 var domain1D = INTERVALS(1)(36);
 var domain2D = DOMAIN([[0,1],[0,1]])([36,36]);
 
-/******************SKELETON******************/
+/******************FRAME******************/
 /******************BOTTOM******************/
 var controls0 = [[96,505,0],[358,753,0],[682,802,0],[1008,556,0],[1008,555,0],[1028,541,0],[1047,550,0],[1104,563,0]];
 controls0 = controlPointsAdjusterXY(controls0);
 var mapc0 = BEZIER(S0)(controls0);
 var curve0 = MAP(mapc0)(domain1D);
 
-var skeleton1 = rectangularSurfaceFromCP([controls0],0.4,0.2);
-skeleton1 = T([X])([-0.96])(skeleton1);
-var skeleton2 = R([X,Z])(-PI/36)(skeleton1);
-skeleton1 = R([X,Z])(PI/36)(skeleton1);
-skeleton2 = T([Z])([-4.4])(skeleton2);
+var cradle1 = rectangularSurfaceFromCP([controls0],0.4,0.2);
+cradle1 = T([X])([-0.96])(cradle1);
+var cradle2 = R([X,Z])(-PI/36)(cradle1);
+cradle1 = R([X,Z])(PI/36)(cradle1);
+cradle2 = T([Z])([-4.4])(cradle2);
 
 var closingComponent1 = CUBOID([0.6,0.17,4.8]);
 closingComponent1 = T([X,Z])([-0.6,-4.8])(closingComponent1);
@@ -152,10 +152,10 @@ closingComponent2 = T([X,Y,Z])([9.9,-0.535,-3.925])(closingComponent2);
 
 var closingComponents = STRUCT([closingComponent1,closingComponent2]);
 
-var skeleton = STRUCT([skeleton1, skeleton2]);
-skeleton = T([Y])([5.05])(skeleton);
-skeleton = STRUCT([skeleton,closingComponents]);
-DRAW(COLOR(brownWood)(skeleton))
+var cradle = STRUCT([cradle1, cradle2]);
+cradle = T([Y])([5.05])(cradle);
+cradle = STRUCT([cradle,closingComponents]);
+DRAW(COLOR(brownWood)(cradle))
 /******************BOTTOM******************/
 
 /******************TOP******************/
@@ -216,15 +216,15 @@ backrest = STRUCT([backrestRight,backrestLeft,backrestDetails]);
 backrest = T([X,Y,Z])([-0.1,0,-2.3])(backrest);
 DRAW(COLOR(brownWood)(backrest));
 /******************TOP******************/
-/******************SKELETON******************/
+/******************FRAME******************/
 
-/******************BASE******************/
-var foot1 = CYLINDER([0.2,2.2])(36);
-foot1 = R([Y,Z])(PI/2)(foot1);
-var foot2 = T([Z])([-5])(foot1);
-var foot3 = T([X])([7.7])(foot1);
-var foot4 = T([X])([7.7])(foot2);
-var feet = STRUCT([foot1,foot2,foot3,foot4]);
+/******************BASEMENT******************/
+var leg1 = CYLINDER([0.2,2.2])(36);
+leg1 = R([Y,Z])(PI/2)(leg1);
+var leg2 = T([Z])([-5])(leg1);
+var leg3 = T([X])([7.7])(leg1);
+var leg4 = T([X])([7.7])(leg2);
+var feet = STRUCT([leg1,leg2,leg3,leg4]);
 
 var support1 = CYLINDER([0.1,5])(36);
 support1 = T([Z])([-5])(support1);
@@ -242,4 +242,4 @@ trasversalComponents = T([Y])([-1.7])(trasversalComponents)
 var base = STRUCT([feet,trasversalComponents,supports]);
 base = T([X,Y,Z])([0.9,-0.5,0.1])(base);
 DRAW(COLOR(brownWood)(base));
-/******************BASE******************/
+/******************BASEMENT******************/
