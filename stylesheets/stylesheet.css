@@ -26,6 +26,7 @@ time, mark, audio, video {
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
 	display: block;
+  text-align: justify;
 }
 body {
 	line-height: 1;
@@ -101,6 +102,8 @@ header h2 {
 #downloads {
   margin-bottom: 40px;
 }
+
+img.center {   display: block;   margin-left: auto;   margin-right: auto; }
 
 a.button {
   -moz-border-radius: 30px;
